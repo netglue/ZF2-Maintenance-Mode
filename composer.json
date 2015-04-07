@@ -1,0 +1,19 @@
+{
+	"name": "netglue/zf2-maintenance-mode",
+	"description": "Simple ZF2 module that returns a 503 for every request",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "George Steel",
+			"email": "george@net-glue.co.uk"
+		}
+	],
+	"require": {
+    "zendframework/zendframework" : ">=2.3"
+	},
+	"autoload" : {
+		"psr-0" : {
+			"NetglueMaintenanceMode" : "src/"
+		}
+	}
+}
