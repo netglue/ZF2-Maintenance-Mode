@@ -54,6 +54,7 @@ class Module implements
     public function onBootstrap(EventInterface $event)
     {
 
+        // Ignore Console Requests
         $request = $event->getRequest();
 		if(!$request instanceof HttpRequest) {
 			return;
@@ -62,6 +63,12 @@ class Module implements
         $application    = $event->getApplication();
         $serviceLocator = $application->getServiceManager();
         $config         = $serviceLocator->get('Config');
+
+        // Check whitelisted IPs
+        $whitelist = isset($config['maintenance-mode']['ip-whitelist']) ? $config['maintenance-mode']['ip-whitelist'] : [];
+        if($this->isIpWhitelisted($whitelist, $request)) {
+            return;
+        }
 
         if (isset($config['maintenance-mode']['lock-file'])) {
             if (!file_exists($config['maintenance-mode']['lock-file'])) {
@@ -79,6 +86,31 @@ class Module implements
         };
         // Attach before routing occurs (Priority higher than 1)
         $application->getEventManager()->attach(MvcEvent::EVENT_ROUTE, $exit, 10);
+    }
+
+    public function isIpWhitelisted(array $whitelist, $request)
+    {
+        $ip = $this->getRequestIp($request);
+        foreach($whitelist as $allow) {
+            if(in_array($allow, $ip)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function getRequestIp($request)
+    {
+        $ip = array();
+        $remote = $request->getServer('REMOTE_ADDR');
+        if($remote) {
+            $ip[] = $remote;
+        }
+        $forward = $request->getServer('HTTP_X_FORWARDED_FOR');
+        if($forward) {
+            $ip[] = $forward;
+        }
+        return $ip;
     }
 
     /**

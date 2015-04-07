@@ -1,4 +1,4 @@
-# ZF2 Maintenance Mode Module
+# ZF2 Maintenance Mode Module [WIP]
 
 A simple module that allows you to create a lock file putting the entire app into 'maintenance mode' for HTTP requests.
 

@@ -23,6 +23,15 @@ return [
          * Content type header for response
          */
         'response-type' => 'text/html',
+
+        /**
+         * Whitelist IP Addresses allowed in maintenance mode
+         * You should put this list in a *.local.php file so it doesn't end up in git
+         * unless that's what you want...
+         */
+        'ip-whitelist' => [
+            // '127.0.0.1',
+        ],
     ],
 
     'console' => [
